@@ -1,18 +1,69 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { useSession } from "@/features/auth/hooks/useSession";
+import {
+  Quicksand_300Light,
+  Quicksand_400Regular,
+  Quicksand_500Medium,
+  Quicksand_600SemiBold,
+  Quicksand_700Bold,
+  useFonts,
+} from "@expo-google-fonts/quicksand";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import AppToaster from "@/components/AppToaster";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function RootLayout() {
+  const { data: session } = useSession();
+
+  console.log("session", session);
+  const [fontsLoaded] = useFonts({
+    Quicksand_300Light,
+    Quicksand_400Regular,
+    Quicksand_500Medium,
+    Quicksand_600SemiBold,
+    Quicksand_700Bold,
+  });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  const isLoggedIn = !!session?.user;
+  const isAccountVerified = !!session?.user?.emailVerified;
+
+  if (!fontsLoaded) return null;
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <KeyboardProvider>
+          <BottomSheetModalProvider>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Protected guard={!isLoggedIn || !isAccountVerified}>
+                <Stack.Screen name="(auth)" />
+              </Stack.Protected>
+
+              <Stack.Protected guard={isLoggedIn && isAccountVerified}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="[foodId]" options={{ title: "Food Details" }} />
+              </Stack.Protected>
+
+              <Stack.Screen name="+not-found" options={{ title: "Not Found" }} />
+            </Stack>
+          </BottomSheetModalProvider>
+        </KeyboardProvider>
+        <AppToaster />
+      </GestureHandlerRootView>
+      <StatusBar style="dark" />
+    </>
   );
 }
