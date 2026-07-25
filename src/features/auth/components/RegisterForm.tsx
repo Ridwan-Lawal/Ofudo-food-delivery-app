@@ -41,7 +41,7 @@ export default function RegisterForm() {
   async function handleRegistration(formData: RegisterFormValues) {
     haptics.tap();
 
-    const { error, data } = await authClient.signUp.email(
+    await authClient.signUp.email(
       {
         name: formData.fullName,
         email: formData.email,

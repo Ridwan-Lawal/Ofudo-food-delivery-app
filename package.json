@@ -2,7 +2,6 @@
   "name": "ofudo",
   "main": "expo-router/entry",
   "version": "1.0.0",
-  "packageManager": "pnpm@10.22.0",
   "dependencies": {
     "@better-auth/expo": "^1.6.24",
     "@expo-google-fonts/quicksand": "^0.4.1",
