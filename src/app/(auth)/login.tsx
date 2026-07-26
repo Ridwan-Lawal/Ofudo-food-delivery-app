@@ -1,4 +1,4 @@
-import LoginForm from "@/features/auth/components/LoginForm";
+import { LoginForm } from "@/features/auth";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 

@@ -8,6 +8,6 @@
 
 ## Checklist
 
-- [ ] `pnpm typecheck` passes
-- [ ] `pnpm lint` passes
+- [ ] `npm typecheck` passes
+- [ ] `npm lint` passes
 - [ ] Self-reviewed my changes
