@@ -7,6 +7,8 @@ import {
   Quicksand_700Bold,
   useFonts,
 } from "@expo-google-fonts/quicksand";
+import { Rubik_700Bold, Rubik_900Black } from "@expo-google-fonts/rubik";
+
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -29,6 +31,8 @@ export default function RootLayout() {
     Quicksand_500Medium,
     Quicksand_600SemiBold,
     Quicksand_700Bold,
+    Rubik_900Black,
+    Rubik_700Bold,
   });
 
   useEffect(() => {

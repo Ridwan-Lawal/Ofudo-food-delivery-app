@@ -11,6 +11,7 @@ export const palette = {
   greenTint: "rgba(47, 168, 79, 0.08)",
   white: "#FFFFFF",
   black: "#000000",
+  almostBlack: "#181C2E",
 } as const;
 
 export const colors = {
@@ -41,6 +42,7 @@ export const fontFamily = {
   medium: "Quicksand_500Medium",
   semibold: "Quicksand_600SemiBold",
   bold: "Quicksand_700Bold",
+  rubik: "Rubik_900Black",
 } as const;
 
 export const fontSize = {
