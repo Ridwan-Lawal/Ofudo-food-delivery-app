@@ -18,8 +18,11 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
 import AppToaster from "@/components/AppToaster";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const { data: session } = useSession();
@@ -49,23 +52,26 @@ export default function RootLayout() {
   return (
     <>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <KeyboardProvider>
-          <BottomSheetModalProvider>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Protected guard={!isLoggedIn || !isAccountVerified}>
-                <Stack.Screen name="(auth)" />
-              </Stack.Protected>
+        <QueryClientProvider client={queryClient}>
 
-              <Stack.Protected guard={isLoggedIn && isAccountVerified}>
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen name="[foodId]" options={{ title: "Food Details" }} />
-              </Stack.Protected>
+          <KeyboardProvider>
+            <BottomSheetModalProvider>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Protected guard={!isLoggedIn || !isAccountVerified}>
+                  <Stack.Screen name="(auth)" />
+                </Stack.Protected>
 
-              <Stack.Screen name="+not-found" options={{ title: "Not Found" }} />
-            </Stack>
-          </BottomSheetModalProvider>
-        </KeyboardProvider>
-        <AppToaster />
+                <Stack.Protected guard={isLoggedIn && isAccountVerified}>
+                  <Stack.Screen name="(tabs)" />
+                  <Stack.Screen name="[foodId]" options={{ title: "Food Details" }} />
+                </Stack.Protected>
+
+                <Stack.Screen name="+not-found" options={{ title: "Not Found" }} />
+              </Stack>
+            </BottomSheetModalProvider>
+          </KeyboardProvider>
+          <AppToaster />
+        </QueryClientProvider>
       </GestureHandlerRootView>
       <StatusBar style="dark" />
     </>
