@@ -44,7 +44,7 @@ export default function FoodList() {
                   { marginTop: index % 2 === 0 ? 0 : FOOD_CARD.stagger },
                 ]}
               >
-                <Image source={item.image_url} style={foodCardStyles.foodImage} transition={200} />
+                <Image source={item.image_url} style={foodCardStyles.foodImage} transition={200} cachePolicy='memory-disk' placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }} />
 
                 <View style={styles.foodDetail}>
                   <Text style={styles.foodName}>{item.name}</Text>
