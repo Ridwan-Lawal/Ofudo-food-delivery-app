@@ -1,296 +1,430 @@
-﻿export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+﻿export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5";
-  };
+    PostgrestVersion: "14.5"
+  }
   public: {
     Tables: {
       account: {
         Row: {
-          accessToken: string | null;
-          accessTokenExpiresAt: string | null;
-          accountId: string;
-          createdAt: string;
-          id: string;
-          idToken: string | null;
-          password: string | null;
-          providerId: string;
-          refreshToken: string | null;
-          refreshTokenExpiresAt: string | null;
-          scope: string | null;
-          updatedAt: string;
-          userId: string;
-        };
+          accessToken: string | null
+          accessTokenExpiresAt: string | null
+          accountId: string
+          createdAt: string
+          id: string
+          idToken: string | null
+          password: string | null
+          providerId: string
+          refreshToken: string | null
+          refreshTokenExpiresAt: string | null
+          scope: string | null
+          updatedAt: string
+          userId: string
+        }
         Insert: {
-          accessToken?: string | null;
-          accessTokenExpiresAt?: string | null;
-          accountId: string;
-          createdAt?: string;
-          id: string;
-          idToken?: string | null;
-          password?: string | null;
-          providerId: string;
-          refreshToken?: string | null;
-          refreshTokenExpiresAt?: string | null;
-          scope?: string | null;
-          updatedAt: string;
-          userId: string;
-        };
+          accessToken?: string | null
+          accessTokenExpiresAt?: string | null
+          accountId: string
+          createdAt?: string
+          id: string
+          idToken?: string | null
+          password?: string | null
+          providerId: string
+          refreshToken?: string | null
+          refreshTokenExpiresAt?: string | null
+          scope?: string | null
+          updatedAt: string
+          userId: string
+        }
         Update: {
-          accessToken?: string | null;
-          accessTokenExpiresAt?: string | null;
-          accountId?: string;
-          createdAt?: string;
-          id?: string;
-          idToken?: string | null;
-          password?: string | null;
-          providerId?: string;
-          refreshToken?: string | null;
-          refreshTokenExpiresAt?: string | null;
-          scope?: string | null;
-          updatedAt?: string;
-          userId?: string;
-        };
+          accessToken?: string | null
+          accessTokenExpiresAt?: string | null
+          accountId?: string
+          createdAt?: string
+          id?: string
+          idToken?: string | null
+          password?: string | null
+          providerId?: string
+          refreshToken?: string | null
+          refreshTokenExpiresAt?: string | null
+          scope?: string | null
+          updatedAt?: string
+          userId?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "account_userId_fkey";
-            columns: ["userId"];
-            isOneToOne: false;
-            referencedRelation: "user";
-            referencedColumns: ["id"];
+            foreignKeyName: "account_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
+      category: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      customization: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          price: number
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          price?: number
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          price?: number
+          type?: string
+        }
+        Relationships: []
+      }
+      menu_item: {
+        Row: {
+          calories: number | null
+          category_id: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number
+          protein: number | null
+          rating: number | null
+        }
+        Insert: {
+          calories?: number | null
+          category_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price: number
+          protein?: number | null
+          rating?: number | null
+        }
+        Update: {
+          calories?: number | null
+          category_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number
+          protein?: number | null
+          rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "menu_item_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "category"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      menu_item_customization: {
+        Row: {
+          customization_id: string
+          menu_item_id: string
+        }
+        Insert: {
+          customization_id: string
+          menu_item_id: string
+        }
+        Update: {
+          customization_id?: string
+          menu_item_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "menu_item_customization_customization_id_fkey"
+            columns: ["customization_id"]
+            isOneToOne: false
+            referencedRelation: "customization"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "menu_item_customization_menu_item_id_fkey"
+            columns: ["menu_item_id"]
+            isOneToOne: false
+            referencedRelation: "menu_item"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       session: {
         Row: {
-          createdAt: string;
-          expiresAt: string;
-          id: string;
-          ipAddress: string | null;
-          token: string;
-          updatedAt: string;
-          userAgent: string | null;
-          userId: string;
-        };
+          createdAt: string
+          expiresAt: string
+          id: string
+          ipAddress: string | null
+          token: string
+          updatedAt: string
+          userAgent: string | null
+          userId: string
+        }
         Insert: {
-          createdAt?: string;
-          expiresAt: string;
-          id: string;
-          ipAddress?: string | null;
-          token: string;
-          updatedAt: string;
-          userAgent?: string | null;
-          userId: string;
-        };
+          createdAt?: string
+          expiresAt: string
+          id: string
+          ipAddress?: string | null
+          token: string
+          updatedAt: string
+          userAgent?: string | null
+          userId: string
+        }
         Update: {
-          createdAt?: string;
-          expiresAt?: string;
-          id?: string;
-          ipAddress?: string | null;
-          token?: string;
-          updatedAt?: string;
-          userAgent?: string | null;
-          userId?: string;
-        };
+          createdAt?: string
+          expiresAt?: string
+          id?: string
+          ipAddress?: string | null
+          token?: string
+          updatedAt?: string
+          userAgent?: string | null
+          userId?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "session_userId_fkey";
-            columns: ["userId"];
-            isOneToOne: false;
-            referencedRelation: "user";
-            referencedColumns: ["id"];
+            foreignKeyName: "session_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
       user: {
         Row: {
-          createdAt: string;
-          email: string;
-          emailVerified: boolean;
-          id: string;
-          image: string | null;
-          name: string;
-          updatedAt: string;
-        };
+          createdAt: string
+          email: string
+          emailVerified: boolean
+          id: string
+          image: string | null
+          name: string
+          updatedAt: string
+        }
         Insert: {
-          createdAt?: string;
-          email: string;
-          emailVerified: boolean;
-          id: string;
-          image?: string | null;
-          name: string;
-          updatedAt?: string;
-        };
+          createdAt?: string
+          email: string
+          emailVerified: boolean
+          id: string
+          image?: string | null
+          name: string
+          updatedAt?: string
+        }
         Update: {
-          createdAt?: string;
-          email?: string;
-          emailVerified?: boolean;
-          id?: string;
-          image?: string | null;
-          name?: string;
-          updatedAt?: string;
-        };
-        Relationships: [];
-      };
+          createdAt?: string
+          email?: string
+          emailVerified?: boolean
+          id?: string
+          image?: string | null
+          name?: string
+          updatedAt?: string
+        }
+        Relationships: []
+      }
       verification: {
         Row: {
-          createdAt: string;
-          expiresAt: string;
-          id: string;
-          identifier: string;
-          updatedAt: string;
-          value: string;
-        };
+          createdAt: string
+          expiresAt: string
+          id: string
+          identifier: string
+          updatedAt: string
+          value: string
+        }
         Insert: {
-          createdAt?: string;
-          expiresAt: string;
-          id: string;
-          identifier: string;
-          updatedAt?: string;
-          value: string;
-        };
+          createdAt?: string
+          expiresAt: string
+          id: string
+          identifier: string
+          updatedAt?: string
+          value: string
+        }
         Update: {
-          createdAt?: string;
-          expiresAt?: string;
-          id?: string;
-          identifier?: string;
-          updatedAt?: string;
-          value?: string;
-        };
-        Relationships: [];
-      };
-    };
+          createdAt?: string
+          expiresAt?: string
+          id?: string
+          identifier?: string
+          updatedAt?: string
+          value?: string
+        }
+        Relationships: []
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R;
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
       }
       ? R
       : never
-    : never;
+    : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I;
+        Insert: infer I
       }
       ? I
       : never
-    : never;
+    : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U;
+        Update: infer U
       }
       ? U
       : never
-    : never;
+    : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never;
+    : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never) = never,
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never;
+    : never
 
 export const Constants = {
   public: {
     Enums: {},
   },
-} as const;
+} as const

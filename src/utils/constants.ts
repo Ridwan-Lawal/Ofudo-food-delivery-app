@@ -1,6 +1,6 @@
-const burgerImage = require("@/assets/images/burger-two.png");
-const pizzaImage = require("@/assets/images/pizza-one.png");
-const burritoImage = require("@/assets/images/buritto.png");
+export const burgerImage = require("@/assets/images/burger-two.png");
+export const pizzaImage = require("@/assets/images/pizza-one.png");
+export const burritoImage = require("@/assets/images/buritto.png");
 
 export const TABS_SCREENS = [
   { name: "index", title: "Home", icon: "home-outline" },

@@ -29,5 +29,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 24,
     gap: 30,
+    backgroundColor: '#fafafa'
   },
 });

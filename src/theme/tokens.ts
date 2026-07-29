@@ -12,6 +12,7 @@ export const palette = {
   white: "#FFFFFF",
   black: "#000000",
   almostBlack: "#181C2E",
+  mist: "#ECECEC",
 } as const;
 
 export const colors = {
@@ -26,6 +27,7 @@ export const colors = {
   background: palette.white,
   surface: palette.white,
   surfaceDark: palette.cocoa,
+  skeleton: palette.mist,
 
   text: {
     primary: palette.ink,
