@@ -3,7 +3,7 @@ import ErrorState from "@/components/ErrorState";
 import { useSession } from "@/features/auth/hooks/useSession";
 import { palette, textVariants } from "@/theme/tokens";
 import { Image } from "expo-image";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useBottomTabBarHeight } from "expo-router/build/react-navigation/bottom-tabs";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useGetMenuItems } from "../hook/useSearch";
@@ -11,6 +11,7 @@ import FoodListSkeleton from "./FoodListSkeleton";
 import { FOOD_CARD, foodCardStyles } from "./foodCard.styles";
 import { QueryParams } from "../types";
 import { getEmptyCopy } from "@/utils/menu";
+import AnimatedPressable from "@/components/AnimatedPressable";
 
 
 
@@ -21,6 +22,7 @@ export default function FoodList() {
   const tabHeight = useBottomTabBarHeight();
   const { data: userData } = useSession()
   const { data, isPending, isError, refetch } = useGetMenuItems(q, category, userData?.user?.id)
+  const router = useRouter()
 
 
   return (
@@ -38,13 +40,18 @@ export default function FoodList() {
           data={data}
           renderItem={({ item, index }) => {
             return (
-              <View
+              <AnimatedPressable
                 style={[
                   foodCardStyles.foodContainer,
                   { marginTop: index % 2 === 0 ? 0 : FOOD_CARD.stagger },
                 ]}
+                onPress={() => { router.push({ pathname: "/[foodId]", params: { foodId: item.id } }) }}
               >
-                <Image source={item.image_url} style={foodCardStyles.foodImage} transition={200} cachePolicy='memory-disk' placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }} />
+                <Image source={item.image_url}
+                  style={foodCardStyles.foodImage}
+                  transition={200}
+                  cachePolicy='memory-disk'
+                  placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }} />
 
                 <View style={styles.foodDetail}>
                   <Text style={styles.foodName}>{item.name}</Text>
@@ -55,7 +62,7 @@ export default function FoodList() {
                   <Text style={styles.addToCartBtnText}>+ Add to cart</Text>
                 </Pressable>
 
-              </View>
+              </AnimatedPressable>
             );
           }}
 
