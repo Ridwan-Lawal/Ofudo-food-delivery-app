@@ -1,3 +1,4 @@
+import { logDevError } from "@/utils/logger";
 import { Resend } from "resend";
 import { renderOtpEmail } from "../emails/otp-email";
 
@@ -12,8 +13,6 @@ export async function sendVerificationOtp({ to, otp }: { to: string; otp: string
   });
 
   if (error) {
-    if (__DEV__) {
-      console.error("Resend error:", error);
-    }
+    logDevError("sendVerificationOtp", error);
   }
 }

@@ -30,6 +30,33 @@ Expo SDK 57 app using **Expo Router** (file-based routing) with React 19.2 and R
 - **Path aliases** (`tsconfig.json`): `@/*` → `src/*`, `@/assets/*` → `assets/*`. Import with
   `@/features/...` rather than long relative paths.
 
+### Loading and error states
+
+Build them as **separate components inside the owning feature's `components/` folder** —
+never inline in the component that fetches. When adding states for a feature, put them
+next to the component they serve:
+
+```
+src/features/food-details/components/
+  Customization.tsx           # fetches, and picks between the three
+  CustomizationSkeleton.tsx   # loading
+  CustomizationError.tsx      # error
+```
+
+The fetching component stays responsible only for choosing which to render. Wrap the
+shared `@/components/SkeletonBlock` and `@/components/ErrorState` rather than
+rebuilding them, and share any geometry the real component and its skeleton must agree
+on via a `*.styles.ts` module (see `src/features/search/components/foodCard.styles.ts`)
+so the two can't drift.
+
+## Code style
+
+- **Comment sparingly.** Only comment occasionally, for genuinely complex code — a
+  non-obvious platform quirk, a workaround, or a decision the code can't express on its
+  own. Don't narrate what the code already says, and don't add section-header or
+  restating comments. When a comment does earn its place, keep it clear, concise, and
+  straight to the point.
+
 ### Config that affects how you write code
 
 - **Typed routes** are enabled (`app.json` → `experiments.typedRoutes`). Route strings are

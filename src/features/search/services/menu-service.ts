@@ -1,5 +1,5 @@
-import { authClient } from "@/lib/auth-client";
 import { supabase } from "@/lib/supabase/supabase";
+import { logDevError } from "@/utils/logger";
 
 
 export async function getCategories(user: string | undefined) {
@@ -8,9 +8,7 @@ export async function getCategories(user: string | undefined) {
   const { data, error } = await supabase.from('category').select('*')
 
   if (error) {
-    if (__DEV__) {
-      console.error(error)
-    }
+    logDevError("getCategories", error)
 
     throw new Error("Something went wrong getting categories")
   }
@@ -37,9 +35,7 @@ export async function getMenuItems(searchQuery: string | undefined, categoryId: 
 
 
   if (error) {
-    if (__DEV__) {
-      console.error(error)
-    }
+    logDevError("getMenuItems", error)
 
     throw new Error('Something went wrong getting menu items')
   }
