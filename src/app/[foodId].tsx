@@ -34,7 +34,7 @@ export default function FoodDetail() {
           </>
         )}
       </ScrollView>
-      {data?.price && <AddToCart foodPrice={data?.price} />}
+      {data && <AddToCart foodData={data} />}
     </SafeAreaView>
   );
 }

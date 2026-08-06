@@ -2,20 +2,31 @@ import AnimatedPressable from "@/components/AnimatedPressable";
 import SkeletonBlock from "@/components/SkeletonBlock";
 import { colors, palette, textVariants } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { useGetCategories } from "../hook/useSearch";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useDebouncedCallback } from "use-debounce";
 import { useState } from "react";
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { useDebouncedCallback } from "use-debounce";
+import { useGetCategories } from "../hook/useSearch";
 import { QueryParams } from "../types";
-
 
 const PILL_HEIGHT = 45;
 const SKELETON_PILL_WIDTHS = [64, 88, 76, 100];
 
-function CategoryPill({ label, onPress, isActive }: { label: string, onPress: () => void, isActive: boolean }) {
+function CategoryPill({
+  label,
+  onPress,
+  isActive,
+}: {
+  label: string;
+  onPress: () => void;
+  isActive: boolean;
+}) {
+  console.log("isActive", isActive, label);
   return (
-    <Pressable style={[styles.pillContainer, isActive && styles.activePillContainer]} onPress={onPress}>
+    <Pressable
+      style={[styles.pillContainer, isActive && styles.activePillContainer]}
+      onPress={onPress}
+    >
       <Text style={[styles.categoryText, isActive && styles.activeCategoryText]}>{label}</Text>
     </Pressable>
   );
@@ -32,35 +43,42 @@ function CategoriesSkeleton() {
 }
 
 export default function FoodFilter() {
-  const router = useRouter()
-  const { data, isPending, error, refetch } = useGetCategories()
-  const { q, category } = useLocalSearchParams<QueryParams>()
-  const [foodName, setFoodName] = useState(q ?? '')
-  const [selectedCategoryId, setSelectedCategoryId] = useState(category ?? 'all')
-  const categories = [{ id: "all", name: "all" }, ...data?.map(categories => ({ id: categories.id, name: categories.name })) ?? []];
+  const router = useRouter();
+  const { data, isPending, error, refetch } = useGetCategories();
+  const { q, category } = useLocalSearchParams<QueryParams>();
+  const [foodName, setFoodName] = useState(q ?? "");
+  const [selectedCategoryId, setSelectedCategoryId] = useState(category ?? "all");
+  const categories = [
+    { id: "all", name: "all" },
+    ...(data?.map((categories) => ({ id: categories.id, name: categories.name })) ?? []),
+  ];
 
+  console.log("CATEGORY:", category === undefined);
+
+  // Continue with the profile screen, the locations, the offline support, pull to refresh
 
   function handleFoodSearch(food: string) {
-    console.log('food:', food)
+    console.log("food:", food);
     if (food) {
-      router.setParams({ q: food })
+      router.setParams({ q: food });
     } else {
-      router.setParams({ q: undefined })
+      router.setParams({ q: undefined });
     }
   }
 
   function handleCategoryChange(categoryId: string) {
-    setSelectedCategoryId(categoryId)
-    if (categoryId !== 'all') {
-      router.setParams({ category: categoryId })
+    setSelectedCategoryId(categoryId);
+    if (categoryId !== "all") {
+      router.setParams({ category: categoryId });
     } else {
-      router.setParams({ category: undefined })
+      router.replace("/search");
     }
   }
 
-  const debouncedHandleFoodSearch = useDebouncedCallback((food: string) => handleFoodSearch(food), 300)
-
-
+  const debouncedHandleFoodSearch = useDebouncedCallback(
+    (food: string) => handleFoodSearch(food),
+    300,
+  );
 
   return (
     <View style={styles.container}>
@@ -70,8 +88,8 @@ export default function FoodFilter() {
             style={styles.inputContainer}
             value={foodName}
             onChangeText={(text) => {
-              setFoodName(text)
-              debouncedHandleFoodSearch(text)
+              setFoodName(text);
+              debouncedHandleFoodSearch(text);
             }}
             placeholder="Search for any food"
             placeholderTextColor={palette.labelGray}
@@ -84,7 +102,11 @@ export default function FoodFilter() {
         <CategoriesSkeleton />
       ) : error ? (
         <View style={styles.categoryRow}>
-          <CategoryPill label="all" onPress={() => handleCategoryChange('all')} isActive={selectedCategoryId === 'all'} />
+          <CategoryPill
+            label="all"
+            onPress={() => handleCategoryChange("all")}
+            isActive={category === undefined}
+          />
 
           <AnimatedPressable style={styles.retryChip} onPress={() => refetch()}>
             <Ionicons name="alert-circle-outline" size={16} color={colors.danger} />
@@ -94,7 +116,16 @@ export default function FoodFilter() {
       ) : (
         <FlatList
           data={categories}
-          renderItem={({ item }) => <CategoryPill label={item.name} onPress={() => handleCategoryChange(item.id)} isActive={item.id === selectedCategoryId} />}
+          renderItem={({ item }) => {
+            console.log("IDS:", item.id, category);
+            return (
+              <CategoryPill
+                label={item.name}
+                onPress={() => handleCategoryChange(item.id)}
+                isActive={item.id === "all" ? !category : category === item.id}
+              />
+            );
+          }}
           keyExtractor={(item) => item.id}
           horizontal={true}
           contentContainerStyle={styles.categoryList}
@@ -107,9 +138,8 @@ export default function FoodFilter() {
 const styles = StyleSheet.create({
   container: {
     gap: 30,
-    backgroundColor: '#fafafa',
-    paddingTop: 30
-
+    backgroundColor: "#fafafa",
+    paddingTop: 30,
   },
   formContainer: {
     backgroundColor: "white",
@@ -130,8 +160,8 @@ const styles = StyleSheet.create({
     gap: 10,
     alignItems: "flex-start",
     paddingLeft: 16,
-    backgroundColor: '#fafafa',
-    paddingBottom: 25
+    backgroundColor: "#fafafa",
+    paddingBottom: 25,
   },
   // categoryList is a FlatList contentContainerStyle, so it carries no flexDirection —
   // the skeleton and error rows are plain Views and need their own.

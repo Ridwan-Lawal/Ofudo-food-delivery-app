@@ -70,6 +70,47 @@ export type Database = {
           },
         ]
       }
+      cart: {
+        Row: {
+          created_at: string
+          foodId: string
+          id: string
+          image_url: string
+          name: string
+          price: number
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          foodId: string
+          id?: string
+          image_url: string
+          name: string
+          price: number
+          quantity: number
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          foodId?: string
+          id?: string
+          image_url?: string
+          name?: string
+          price?: number
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       category: {
         Row: {
           created_at: string

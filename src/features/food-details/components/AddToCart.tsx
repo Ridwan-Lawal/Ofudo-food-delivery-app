@@ -1,24 +1,63 @@
 import AnimatedPressable from "@/components/AnimatedPressable";
+import { useAddCart, useUpdateCart } from "@/features/cart/components/hooks/useCart";
+import { useCartStore } from "@/features/cart/store/cart-store";
+import { FoodDetail } from "@/lib/supabase/supabase";
 import { palette, textVariants } from "@/theme/tokens";
 import { Ionicons, Octicons } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export function AddToCart({ foodPrice }: { foodPrice: number | undefined }) {
+export function AddToCart({ foodData }: { foodData: FoodDetail }) {
   const insets = useSafeAreaInsets();
+  const { foodId } = useLocalSearchParams<{ foodId: string }>();
+  const cart = useCartStore((s) => s.cart);
+  const foodItem = cart?.find((item) => item.foodId === foodId);
+  const { handleFoodItemDeletion, handleQuantityIncrease } = useUpdateCart(foodItem);
+  const isFoodInCart = !!foodItem;
+  const { handleAddFoodToCart } = useAddCart();
+
+  const onAddFoodToCart = () => {
+    const foodDetail = {
+      name: foodData.name,
+      price: foodData.price,
+      image_url: foodData.image_url,
+    };
+
+    handleAddFoodToCart(foodDetail, foodId);
+  };
 
   return (
     <View style={[styles.container, { bottom: insets.bottom + 10 }]}>
       <View style={styles.addToCartContainer}>
-        <View style={styles.foodQuantityControl}>
-          <Octicons name="dash" color={palette.orange} size={30} />
-          <Text style={styles.foodQuantity}>2</Text>
-          <Octicons name="plus" color={palette.orange} size={30} />
-        </View>
+        {foodItem && (
+          <View style={styles.foodQuantityControl}>
+            <Octicons
+              name="dash"
+              color={palette.orange}
+              size={20}
+              onPress={() => handleQuantityIncrease("decr")}
+            />
+            <Text style={styles.foodQuantity}>{foodItem?.quantity}</Text>
+            <Octicons
+              name="plus"
+              color={palette.orange}
+              size={20}
+              onPress={() => handleQuantityIncrease("incr")}
+            />
+          </View>
+        )}
 
-        <AnimatedPressable onPress={() => {}} style={styles.addToCartBtn}>
+        <AnimatedPressable
+          onPress={isFoodInCart ? handleFoodItemDeletion : onAddFoodToCart}
+          style={styles.addToCartBtn}
+        >
           <Ionicons name="cart-outline" color="white" size={14} />
-          <Text style={styles.addToCartText}>Add to cart (${foodPrice})</Text>
+          <Text style={styles.addToCartText}>
+            {isFoodInCart
+              ? `Remove food ($${foodData?.price})`
+              : `Add to cart (${foodData?.price})`}
+          </Text>
         </AnimatedPressable>
       </View>
     </View>
