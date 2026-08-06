@@ -1,3 +1,4 @@
+import FetchCartFromDb from "@/components/FetchCartFromDb";
 import LoginSuccessModal from "@/features/auth/components/LoginSuccessModal";
 import { palette, textVariants } from "@/theme/tokens";
 import { TABS_SCREENS } from "@/utils/constants";
@@ -55,6 +56,7 @@ export default function Layout() {
         ))}
       </Tabs>
       <LoginSuccessModal />
+      <FetchCartFromDb />
     </>
   );
 }

@@ -2,28 +2,21 @@ import EmptyState from "@/components/EmptyState";
 import ErrorState from "@/components/ErrorState";
 import { useSession } from "@/features/auth/hooks/useSession";
 import { palette, textVariants } from "@/theme/tokens";
-import { Image } from "expo-image";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useBottomTabBarHeight } from "expo-router/build/react-navigation/bottom-tabs";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import { useGetMenuItems } from "../hook/useSearch";
-import FoodListSkeleton from "./FoodListSkeleton";
-import { FOOD_CARD, foodCardStyles } from "./foodCard.styles";
-import { QueryParams } from "../types";
 import { getEmptyCopy } from "@/utils/menu";
-import AnimatedPressable from "@/components/AnimatedPressable";
-
-
-
-
+import { useLocalSearchParams } from "expo-router";
+import { useBottomTabBarHeight } from "expo-router/build/react-navigation/bottom-tabs";
+import { FlatList, StyleSheet, View } from "react-native";
+import { useGetMenuItems } from "../hook/useSearch";
+import { QueryParams } from "../types";
+import FoodCard from "./FoodCard";
+import FoodListSkeleton from "./FoodListSkeleton";
+import { FOOD_CARD } from "./foodCard.styles";
 
 export default function FoodList() {
-  const { q, category } = useLocalSearchParams<QueryParams>()
+  const { q, category } = useLocalSearchParams<QueryParams>();
   const tabHeight = useBottomTabBarHeight();
-  const { data: userData } = useSession()
-  const { data, isPending, isError, refetch } = useGetMenuItems(q, category, userData?.user?.id)
-  const router = useRouter()
-
+  const { data: userData } = useSession();
+  const { data, isPending, isError, refetch } = useGetMenuItems(q, category, userData?.user?.id);
 
   return (
     <View style={styles.container}>
@@ -35,37 +28,9 @@ export default function FoodList() {
           onRetry={() => refetch()}
         />
       ) : (
-        /*each food container*/
         <FlatList
           data={data}
-          renderItem={({ item, index }) => {
-            return (
-              <AnimatedPressable
-                style={[
-                  foodCardStyles.foodContainer,
-                  { marginTop: index % 2 === 0 ? 0 : FOOD_CARD.stagger },
-                ]}
-                onPress={() => { router.push({ pathname: "/[foodId]", params: { foodId: item.id } }) }}
-              >
-                <Image source={item.image_url}
-                  style={foodCardStyles.foodImage}
-                  transition={200}
-                  cachePolicy='memory-disk'
-                  placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }} />
-
-                <View style={styles.foodDetail}>
-                  <Text style={styles.foodName}>{item.name}</Text>
-                  <Text style={styles.foodPrice}>from ${item.price}</Text>
-                </View>
-
-                <Pressable>
-                  <Text style={styles.addToCartBtnText}>+ Add to cart</Text>
-                </Pressable>
-
-              </AnimatedPressable>
-            );
-          }}
-
+          renderItem={({ item, index }) => <FoodCard item={item} index={index} />}
           keyExtractor={(item) => item.id}
           ListEmptyComponent={<EmptyState {...getEmptyCopy(q, category)} />}
           numColumns={2}
@@ -75,7 +40,6 @@ export default function FoodList() {
             alignItems: "flex-start",
           }}
           contentContainerStyle={{
-            // Lets EmptyState's flex:1 fill the viewport instead of collapsing to the top.
             flexGrow: 1,
             paddingTop: 20,
             gap: FOOD_CARD.rowGap,
@@ -92,7 +56,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
     paddingHorizontal: 16,
-
   },
 
   foodDetail: {
