@@ -1,5 +1,6 @@
 import FetchCartFromDb from "@/components/FetchCartFromDb";
 import LoginSuccessModal from "@/features/auth/components/LoginSuccessModal";
+import { InitUserLocation } from "@/features/location";
 import { palette, textVariants } from "@/theme/tokens";
 import { TABS_SCREENS } from "@/utils/constants";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -57,6 +58,7 @@ export default function Layout() {
       </Tabs>
       <LoginSuccessModal />
       <FetchCartFromDb />
+      <InitUserLocation />
     </>
   );
 }
