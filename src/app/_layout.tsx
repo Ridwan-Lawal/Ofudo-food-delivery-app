@@ -83,7 +83,7 @@ export default function RootLayout() {
       if (screen === "cart") router.push("/cart");
     });
     return () => sub.remove();
-  }, []);
+  }, [router]);
 
   const isLoggedIn = !!session?.user;
   const isAccountVerified = !!session?.user?.emailVerified;

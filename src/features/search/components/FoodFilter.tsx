@@ -21,7 +21,6 @@ function CategoryPill({
   onPress: () => void;
   isActive: boolean;
 }) {
-
   return (
     <Pressable
       style={[styles.pillContainer, isActive && styles.activePillContainer]}
@@ -52,8 +51,6 @@ export default function FoodFilter() {
     { id: "all", name: "all" },
     ...(data?.map((categories) => ({ id: categories.id, name: categories.name })) ?? []),
   ];
-
-  
 
   function handleFoodSearch(food: string) {
     console.log("food:", food);
