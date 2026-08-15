@@ -1,13 +1,30 @@
 import FetchCartFromDb from "@/components/FetchCartFromDb";
 import LoginSuccessModal from "@/features/auth/components/LoginSuccessModal";
+import { InitUserLocation } from "@/features/location";
+import { apiFetch } from "@/lib/apiFetch";
+import { registerForPush } from "@/lib/push";
 import { palette, textVariants } from "@/theme/tokens";
 import { TABS_SCREENS } from "@/utils/constants";
+import { logDevError } from "@/utils/logger";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
+import { useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Layout() {
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    registerForPush().then((token) => {
+      if (!token) return;
+      apiFetch("/api/push-token", {
+        method: "POST",
+        body: JSON.stringify({ token }),
+      }).catch((error) => {
+        logDevError("push notification register", error);
+      });
+    });
+  }, []);
 
   return (
     <>
@@ -57,6 +74,7 @@ export default function Layout() {
       </Tabs>
       <LoginSuccessModal />
       <FetchCartFromDb />
+      <InitUserLocation />
     </>
   );
 }

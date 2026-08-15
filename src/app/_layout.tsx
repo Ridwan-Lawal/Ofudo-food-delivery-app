@@ -18,16 +18,49 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
 import AppToaster from "@/components/AppToaster";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import OfflineBanner from "@/components/OfflineBanner";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { onlineManager, QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+
+import * as Notifications from "expo-notifications";
+import { useRouter } from "expo-router";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+const A_DAY = 1000 * 60 * 60 * 24;
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: A_DAY,
+      staleTime: 1000 * 60 * 5,
+      retry: 2,
+    },
+  },
+});
+
+const persister = createAsyncStoragePersister({ storage: AsyncStorage });
+
+onlineManager.setEventListener((setOnline) =>
+  NetInfo.addEventListener((state) => setOnline(!!state.isConnected)),
+);
 
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient();
-
 export default function RootLayout() {
   const { data: session } = useSession();
+  const router = useRouter();
 
-  console.log("session", session);
   const [fontsLoaded] = useFonts({
     Quicksand_300Light,
     Quicksand_400Regular,
@@ -44,6 +77,14 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
+  useEffect(() => {
+    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
+      const screen = response.notification.request.content.data?.screen;
+      if (screen === "cart") router.push("/cart");
+    });
+    return () => sub.remove();
+  }, [router]);
+
   const isLoggedIn = !!session?.user;
   const isAccountVerified = !!session?.user?.emailVerified;
 
@@ -52,8 +93,10 @@ export default function RootLayout() {
   return (
     <>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <QueryClientProvider client={queryClient}>
-
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{ persister, maxAge: A_DAY }}
+        >
           <KeyboardProvider>
             <BottomSheetModalProvider>
               <Stack screenOptions={{ headerShown: false }}>
@@ -71,7 +114,8 @@ export default function RootLayout() {
             </BottomSheetModalProvider>
           </KeyboardProvider>
           <AppToaster />
-        </QueryClientProvider>
+          <OfflineBanner />
+        </PersistQueryClientProvider>
       </GestureHandlerRootView>
       <StatusBar style="dark" />
     </>

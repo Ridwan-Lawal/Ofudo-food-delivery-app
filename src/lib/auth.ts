@@ -2,7 +2,7 @@ import { sendVerificationOtp } from "@/features/auth/services/resend";
 import { expo } from "@better-auth/expo";
 import { betterAuth } from "better-auth";
 import { emailOTP } from "better-auth/plugins";
-import { Pool } from "pg";
+import { pool } from "./server/db";
 
 export const auth = betterAuth({
   emailAndPassword: {
@@ -36,12 +36,7 @@ export const auth = betterAuth({
       maxAge: 60 * 5,
     },
   },
-  database: new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  }),
+  database: pool,
   trustedOrigins: [
     // Basic scheme
     "ofudo://",

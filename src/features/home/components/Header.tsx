@@ -1,29 +1,29 @@
-import { fontFamily, palette, textVariants } from "@/theme/tokens";
+import { useCartStore } from "@/features/cart/store/cart-store";
+import { DeliverTo } from "@/features/location";
+import { palette, textVariants } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const DropdownIcon = require("@/assets/icons/triangle-down.svg");
 
 export default function HomeHeader() {
+  const cart = useCartStore((s) => s.cart);
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
-      <View style={styles.firstFlexItem}>
-        <Text style={styles.title}>deliver to</Text>
-        <View style={styles.locationContainer}>
-          <Text style={styles.location}>Lagos, Nigeria</Text>
-          <Image source={DropdownIcon} style={styles.dropdownIcon} />
-        </View>
-      </View>
+      <DeliverTo accessory={<Image source={DropdownIcon} style={styles.dropdownIcon} />} />
 
-      <View style={styles.secondFlexItem}>
+      <Pressable onPress={() => router.push("/cart")} style={styles.secondFlexItem}>
         <View style={styles.cartContainer}>
           <Ionicons name="cart-outline" size={20} color="white" />
         </View>
         <View style={styles.itemCount}>
-          <Text style={styles.itemCountText}>2</Text>
+          <Text style={styles.itemCountText}>{cart?.length ?? 0}</Text>
         </View>
-      </View>
+      </Pressable>
     </View>
   );
 }
@@ -33,26 +33,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-
-  firstFlexItem: {
-    gap: 6,
-  },
-  title: {
-    color: palette.orange,
-    fontFamily: fontFamily.bold,
-    fontSize: 12,
-    textTransform: "uppercase",
-  },
-
-  locationContainer: {
-    flexDirection: "row",
-    gap: 4,
-    alignItems: "center",
-  },
-  location: {
-    ...textVariants.value,
-    color: palette.almostBlack,
   },
 
   dropdownIcon: {

@@ -20,8 +20,6 @@ export async function getMenuItems(
   categoryId: string | undefined,
   userId: string | undefined,
 ) {
-  console.log("query:", searchQuery, "category:", categoryId);
-
   if (!userId) throw new Error("You need to be signed in to access this data");
 
   let query = supabase.from("menu_item").select("id,name,image_url,price,category(*)");
@@ -40,8 +38,6 @@ export async function getMenuItems(
 
     throw new Error("Something went wrong getting menu items");
   }
-
-  console.log("data from db", data, error);
 
   return data || [];
 }

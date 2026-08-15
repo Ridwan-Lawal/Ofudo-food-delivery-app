@@ -21,7 +21,6 @@ function CategoryPill({
   onPress: () => void;
   isActive: boolean;
 }) {
-  console.log("isActive", isActive, label);
   return (
     <Pressable
       style={[styles.pillContainer, isActive && styles.activePillContainer]}
@@ -52,10 +51,6 @@ export default function FoodFilter() {
     { id: "all", name: "all" },
     ...(data?.map((categories) => ({ id: categories.id, name: categories.name })) ?? []),
   ];
-
-  console.log("CATEGORY:", category === undefined);
-
-  // Continue with the profile screen, the locations, the offline support, pull to refresh
 
   function handleFoodSearch(food: string) {
     console.log("food:", food);

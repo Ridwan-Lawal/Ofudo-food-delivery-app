@@ -5,7 +5,7 @@ import { Pool } from "pg";
 import _dummyData from "./src/utils/data"; // adjust path to your file
 const dummyData = (_dummyData as any).default ?? _dummyData;
 
-console.log("categories:", dummyData?.categories?.length); // should print 6
+// should print 6
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,

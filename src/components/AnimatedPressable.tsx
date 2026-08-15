@@ -21,7 +21,7 @@ interface AnimatedPressableProps extends Omit<PressableProps, "style" | "childre
 export default function AnimatedPressable({
   children,
   style,
-  activeScale = 0.95,
+  activeScale = 0.96,
   onPressIn,
   onPressOut,
   onPress,

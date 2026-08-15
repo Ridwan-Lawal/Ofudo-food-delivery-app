@@ -19,7 +19,7 @@ export const authClient = createAuthClient({
     // collapses client plugin inference and drops `authClient.emailOtp`. Casting away just
     // the offending `getActions` satisfies the constraint while preserving the rest of the
     // plugin's type, so both `emailOtp` and session inference stay intact. `getActions` only
-    // exposes `getCookie` (unused here) and the cast is type-only — runtime is unaffected.
+    // exposes `getCookie`, re-typed below as ExpoClientActions; the cast is type-only.
     expoClient({
       scheme: "ofudo",
       storagePrefix: "ofudo",
@@ -27,3 +27,5 @@ export const authClient = createAuthClient({
     }) as Omit<ReturnType<typeof expoClient>, "getActions">,
   ],
 });
+
+export type ExpoClientActions = ReturnType<ReturnType<typeof expoClient>["getActions"]>;

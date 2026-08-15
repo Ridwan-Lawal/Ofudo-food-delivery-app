@@ -5,7 +5,7 @@ import { palette, textVariants } from "@/theme/tokens";
 import { getEmptyCopy } from "@/utils/menu";
 import { useLocalSearchParams } from "expo-router";
 import { useBottomTabBarHeight } from "expo-router/build/react-navigation/bottom-tabs";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useGetMenuItems } from "../hook/useSearch";
 import { QueryParams } from "../types";
 import FoodCard from "./FoodCard";
@@ -16,7 +16,11 @@ export default function FoodList() {
   const { q, category } = useLocalSearchParams<QueryParams>();
   const tabHeight = useBottomTabBarHeight();
   const { data: userData } = useSession();
-  const { data, isPending, isError, refetch } = useGetMenuItems(q, category, userData?.user?.id);
+  const { data, isPending, isError, refetch, isRefetching } = useGetMenuItems(
+    q,
+    category,
+    userData?.user?.id,
+  );
 
   return (
     <View style={styles.container}>
@@ -45,6 +49,14 @@ export default function FoodList() {
             gap: FOOD_CARD.rowGap,
             paddingBottom: tabHeight + 30,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetching}
+              onRefresh={refetch}
+              tintColor={palette.orange} // iOS spinner color
+              colors={[palette.orange]} // Android spinner colors (array)
+            />
+          }
         />
       )}
     </View>
