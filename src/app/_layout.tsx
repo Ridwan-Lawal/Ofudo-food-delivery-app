@@ -25,6 +25,18 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { onlineManager, QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
+import * as Notifications from "expo-notifications";
+import { useRouter } from "expo-router";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 const A_DAY = 1000 * 60 * 60 * 24;
 
 const queryClient = new QueryClient({
@@ -47,8 +59,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const { data: session } = useSession();
+  const router = useRouter();
 
-  console.log("session", session);
   const [fontsLoaded] = useFonts({
     Quicksand_300Light,
     Quicksand_400Regular,
@@ -64,6 +76,14 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
+
+  useEffect(() => {
+    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
+      const screen = response.notification.request.content.data?.screen;
+      if (screen === "cart") router.push("/cart");
+    });
+    return () => sub.remove();
+  }, []);
 
   const isLoggedIn = !!session?.user;
   const isAccountVerified = !!session?.user?.emailVerified;

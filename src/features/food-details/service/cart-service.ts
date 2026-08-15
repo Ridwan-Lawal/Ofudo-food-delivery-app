@@ -1,4 +1,5 @@
 import { CartItem } from "@/features/cart/types";
+import { apiFetch } from "@/lib/apiFetch";
 import { supabase } from "@/lib/supabase/supabase";
 import { logDevError } from "@/utils/logger";
 
@@ -89,6 +90,14 @@ export async function addFoodToCartAction(userId: string | undefined, cartItem: 
     logDevError("Add Food to cart error", error);
     throw new Error("Something went wrong adding food to cart");
   }
+
+
+  apiFetch("/api/notify-cart", {
+    method: "POST",
+    body: JSON.stringify({ itemName: data.name }),
+  })
+    .then(async (r) => console.log("notify status:", r.status, await r.text()))
+    .catch((e) => console.log("notify failed:", e));
 
   return data;
 }

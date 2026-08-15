@@ -29,7 +29,6 @@ export async function pickAndUploadAvatar(userId: string | undefined) {
   });
 
   if (result.canceled) return null;
-  console.log(result, result.assets, result.assets[0]);
 
   const asset = result.assets[0];
   if (!asset.base64) throw new Error("No image data");
