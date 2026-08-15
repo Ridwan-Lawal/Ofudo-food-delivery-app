@@ -11,6 +11,12 @@ Expo Router project, deployed as one unit.
 Android is the actively developed target. The project is configured for iOS and web, but only
 Android has been built and tested.
 
+## Screenshots
+
+|                                                            Home                                                             |                                                         Search                                                          |                                                      Food detail                                                       |                                                   Cart                                                   |
+| :-------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
+| ![Home screen showing the delivery location, a promotional combo card and category cards](assets/screenshots/home-page.jpg) | ![Search screen with a query field, category filter pills and a two-column results grid](assets/screenshots/search.jpg) | ![Food detail screen showing rating, nutrition, bun type and selectable toppings](assets/screenshots/food-details.jpg) | ![Cart screen listing items with quantity controls above a payment summary](assets/screenshots/cart.jpg) |
+
 ## Features
 
 **Authentication.** Email and password sign-up with mandatory email verification. Verification
